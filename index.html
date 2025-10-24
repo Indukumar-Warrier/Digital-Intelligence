@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Digital Intelligence Workshop Chatbot</title>
+</head>
+<body>
+    <h1>Digital Intelligence Workshop Chatbot</h1>
+    
+    <div id="chat" style="border:1px solid #ccc; height:300px; overflow-y:auto; padding:10px; margin:10px 0;">
+        <p><strong>Bot:</strong> Hello! Ask me about the Digital Intelligence Workshop.</p>
+    </div>
+    
+    <input type="text" id="input" placeholder="Type your question..." style="width:70%; padding:10px;">
+    <button onclick="sendMessage()" style="padding:10px;">Send</button>
+    
+    <br><br>
+    <button onclick="ask('Who conducted the workshop?')">Who conducted workshop?</button>
+    <button onclick="ask('What is Arduino?')">About Arduino</button>
+    <button onclick="ask('What is IoT?')">About IoT</button>
+    <button onclick="ask('Where was workshop?')">Location</button>
+    
+    <script>
+        function sendMessage() {
+            var input = document.getElementById('input');
+            var chat = document.getElementById('chat');
+            var question = input.value;
+            
+            if (question.trim() === '') return;
+            
+            chat.innerHTML += '<p><strong>You:</strong> ' + question + '</p>';
+            
+            var answer = getAnswer(question.toLowerCase());
+            chat.innerHTML += '<p><strong>Bot:</strong> ' + answer + '</p>';
+            
+            input.value = '';
+            chat.scrollTop = chat.scrollHeight;
+        }
+        
+        function ask(question) {
+            document.getElementById('input').value = question;
+            sendMessage();
+        }
+        
+        function getAnswer(question) {
+            if (question.includes('who') && question.includes('conducted')) {
+                return 'Indukumar P P - ITI Electrical, MSc Physics, PGDCA. Mobile: 9446742953';
+            }
+            if (question.includes('arduino')) {
+                return 'Arduino is a microcontroller that acts as robot brain, controlling sensors and motors.';
+            }
+            if (question.includes('iot')) {
+                return 'IoT connects devices via internet using NodeMCU (ESP8266) to send data to cloud.';
+            }
+            if (question.includes('where') || question.includes('location')) {
+                return 'District Building (Jilla Mandiram), Desam, Aluva';
+            }
+            if (question.includes('art') && question.includes('exhibition')) {
+                return 'Abhijith R from Sivadrumam, Peruvaram. Mobile: 8590566698';
+            }
+            if (question.includes('topics') || question.includes('covered')) {
+                return 'Advanced Electronics, Robotics using Arduino, Embedded Systems, IoT using NodeMCU, AI and Machine Learning';
+            }
+            return 'Please ask about workshop conductor, Arduino, IoT, location, or art exhibition.';
+        }
+        
+        document.getElementById('input').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        });
+    </script>
+</body>
+</html>
