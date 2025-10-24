@@ -39,54 +39,108 @@
         function findAnswer(question) {
             const q = question.toLowerCase().trim();
             
-            // Step 1: Check for EXACT keywords first
-            for (let category in keywords) {
-                const categoryKeywords = keywords[category];
-                for (let keyword of categoryKeywords) {
-                    if (q.includes(keyword)) {
-                        // Find Q&A that matches this category
-                        for (let qaKey in qaData) {
-                            if (qaKey.includes(category) || categoryKeywords.some(kw => qaKey.includes(kw))) {
-                                return qaData[qaKey];
-                            }
-                        }
-                    }
-                }
-            }
-            
-            // Step 2: Search in JSON Q&A if no exact keyword match
-            // Direct match
+            // Step 1: Exact match in Q&A (highest priority)
             if (qaData[q]) return qaData[q];
             
-            // Partial match in Q&A
-            for (let key in qaData) {
-                if (q.includes(key) || key.includes(q)) {
-                    return qaData[key];
+            // Step 2: Check for specific question patterns
+            if (q.includes('art') && q.includes('where')) {
+                return qaData['where art exhibition'] || qaData['art exhibition location'] || 'Art exhibition arranged nearby the workshop venue';
+            }
+            if (q.includes('art') && (q.includes('who') || q.includes('conducted'))) {
+                return qaData['who conducted art exhibition'] || qaData['art exhibition artist'] || 'Abhijith R from Sivadrumam, Peruvaram';
+            }
+            
+            // Step 3: Keyword matching with better accuracy
+            for (let category in keywords) {
+                const categoryKeywords = keywords[category];
+                let keywordMatches = 0;
+                
+                // Count how many keywords match
+                for (let keyword of categoryKeywords) {
+                    if (q.includes(keyword)) {
+                        keywordMatches++;
+                    }
+                }
+                
+                // If multiple keywords match or single strong match
+                if (keywordMatches >= 2 || (keywordMatches === 1 && categoryKeywords.some(kw => q === kw))) {
+                    // Find best matching Q&A for this category
+                    let bestMatch = null;
+                    let bestScore = 0;
+                    
+                    for (let qaKey in qaData) {
+                        let score = 0;
+                        if (qaKey.includes(category)) score += 3;
+                        
+                        for (let kw of categoryKeywords) {
+                            if (qaKey.includes(kw)) score += 2;
+                            if (q.includes(kw) && qaKey.includes(kw)) score += 1;
+                        }
+                        
+                        if (score > bestScore) {
+                            bestScore = score;
+                            bestMatch = qaData[qaKey];
+                        }
+                    }
+                    
+                    if (bestMatch) return bestMatch;
                 }
             }
             
-            // Word matching in Q&A keys
+            // Step 4: Partial match in Q&A keys (improved)
+            let bestPartialMatch = null;
+            let bestPartialScore = 0;
+            
             for (let key in qaData) {
+                let score = 0;
+                
+                // Exact substring match
+                if (key.includes(q) || q.includes(key)) score += 5;
+                
+                // Word-by-word matching
                 const keyWords = key.split(' ');
                 const qWords = q.split(' ');
                 const matches = keyWords.filter(word => qWords.includes(word));
-                if (matches.length >= 2) {
-                    return qaData[key];
+                score += matches.length;
+                
+                // Bonus for longer matches
+                if (matches.length >= keyWords.length / 2) score += 2;
+                
+                if (score > bestPartialScore && score >= 2) {
+                    bestPartialScore = score;
+                    bestPartialMatch = qaData[key];
                 }
             }
             
-            // Step 3: Search in PDF chunks if not found in JSON
+            if (bestPartialMatch) return bestPartialMatch;
+            
+            // Step 5: Search in PDF chunks with better matching
             const words = q.split(' ').filter(w => w.length > 3);
+            let bestChunk = null;
+            let bestChunkScore = 0;
+            
             for (let chunk of pdfChunks) {
                 const chunkLower = chunk.toLowerCase();
-                const matches = words.filter(word => chunkLower.includes(word));
-                if (matches.length >= 2) {
-                    return chunk.substring(0, 300) + '...';
+                let score = 0;
+                
+                for (let word of words) {
+                    if (chunkLower.includes(word)) {
+                        score += word.length; // Longer words get higher score
+                    }
+                }
+                
+                if (score > bestChunkScore && score >= 8) {
+                    bestChunkScore = score;
+                    bestChunk = chunk;
                 }
             }
             
-            // Step 4: Return exact question if nothing found
-            return `I don't have information about: '${question}'. Please ask about workshop topics, instructor, or art exhibition.`;
+            if (bestChunk) {
+                return bestChunk.substring(0, 300) + '...';
+            }
+            
+            // Step 6: Return helpful message
+            return `I don't have specific information about '${question}'. Try asking about: workshop conductor, Arduino, IoT, topics covered, art exhibition, or location.`;
         }
         
         function sendMessage() {
