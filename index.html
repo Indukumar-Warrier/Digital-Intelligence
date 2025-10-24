@@ -5,158 +5,51 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Digital Intelligence Workshop Chatbot</title>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { 
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-        }
-        .header {
-            background: rgba(255,255,255,0.1);
-            backdrop-filter: blur(10px);
-            padding: 15px;
-            text-align: center;
-            color: white;
-            border-bottom: 1px solid rgba(255,255,255,0.2);
-        }
-        .header h1 { font-size: 1.2rem; font-weight: 600; }
-        .chat-container {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            max-width: 800px;
-            margin: 0 auto;
-            width: 100%;
-            padding: 0 10px;
-        }
-        .chat { 
-            flex: 1;
-            overflow-y: auto;
-            padding: 20px 0;
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-        .message { 
-            max-width: 85%;
-            padding: 12px 16px;
-            border-radius: 18px;
-            word-wrap: break-word;
-            animation: fadeIn 0.3s ease;
-        }
-        .user { 
-            background: #007AFF;
-            color: white;
-            align-self: flex-end;
-            margin-left: auto;
-        }
-        .bot { 
-            background: rgba(255,255,255,0.9);
-            color: #333;
-            align-self: flex-start;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
-        .suggestions {
-            padding: 10px;
-            display: flex;
-            gap: 8px;
-            overflow-x: auto;
-            scrollbar-width: none;
-            -ms-overflow-style: none;
-        }
-        .suggestions::-webkit-scrollbar { display: none; }
-        .suggestion {
-            background: rgba(255,255,255,0.2);
-            color: white;
-            border: 1px solid rgba(255,255,255,0.3);
-            padding: 8px 12px;
-            border-radius: 20px;
-            white-space: nowrap;
-            cursor: pointer;
-            font-size: 0.9rem;
-            transition: all 0.2s;
-        }
-        .suggestion:hover {
-            background: rgba(255,255,255,0.3);
-            transform: translateY(-1px);
-        }
-        .input-container {
-            padding: 15px;
-            background: rgba(255,255,255,0.1);
-            backdrop-filter: blur(10px);
-            border-top: 1px solid rgba(255,255,255,0.2);
-        }
-        .input-form {
-            display: flex;
-            gap: 10px;
-            align-items: center;
-        }
-        input { 
-            flex: 1;
-            padding: 12px 16px;
-            border: none;
-            border-radius: 25px;
-            background: rgba(255,255,255,0.9);
-            font-size: 16px;
-            outline: none;
-        }
-        button { 
-            background: #007AFF;
-            color: white;
-            border: none;
-            width: 45px;
-            height: 45px;
-            border-radius: 50%;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.2s;
-        }
-        button:hover {
-            background: #0056CC;
-            transform: scale(1.05);
-        }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        @media (max-width: 480px) {
-            .header h1 { font-size: 1rem; }
-            .message { max-width: 90%; }
-            .suggestion { font-size: 0.8rem; padding: 6px 10px; }
+        * { box-sizing: border-box; }
+        body { font-family: Arial, sans-serif; margin: 0; padding: 10px; background: #f0f0f0; min-height: 100vh; }
+        .container { max-width: 800px; margin: 0 auto; }
+        h1 { text-align: center; margin: 10px 0; font-size: 1.5em; }
+        .chat { border: 1px solid #ccc; height: 60vh; overflow-y: auto; padding: 15px; background: white; margin: 10px 0; border-radius: 8px; }
+        .message { margin: 10px 0; padding: 12px; border-radius: 8px; word-wrap: break-word; }
+        .user { background: #007bff; color: white; text-align: right; margin-left: 20%; }
+        .bot { background: #e9ecef; margin-right: 20%; }
+        .input-area { display: flex; gap: 10px; margin: 10px 0; }
+        input { flex: 1; padding: 12px; border: 1px solid #ccc; border-radius: 6px; font-size: 16px; }
+        button { padding: 12px 20px; background: #007bff; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 16px; }
+        button:hover { background: #0056b3; }
+        .suggestions { margin: 10px 0; text-align: center; }
+        .suggestions button { background: #28a745; font-size: 14px; padding: 8px 12px; margin: 5px; border-radius: 20px; }
+        .suggestions button:hover { background: #1e7e34; }
+        @media (max-width: 600px) {
+            body { padding: 5px; }
+            h1 { font-size: 1.3em; }
+            .chat { height: 50vh; padding: 10px; }
+            .message { padding: 10px; }
+            .user { margin-left: 10%; }
+            .bot { margin-right: 10%; }
+            input { font-size: 16px; }
+            button { padding: 10px 15px; }
         }
     </style>
 </head>
 <body>
-    <div class="header">
+    <div class="container">
         <h1>🤖 Digital Intelligence Workshop Chatbot</h1>
-    </div>
-    
-    <div class="chat-container">
+        
         <div class="chat" id="chat">
-            <div class="message bot">👋 Hello! Ask me about the Digital Intelligence Workshop by Indukumar P P and Art Exhibition by Abhijith R.</div>
+            <div class="message bot">👋 Hello! Ask me about the Digital Intelligence Workshop.</div>
+        </div>
+      
+        <div class="input-area">
+            <input type="text" id="input" placeholder="Type your question...">
+            <button onclick="sendMessage()">Send</button>
         </div>
         
         <div class="suggestions">
-            <div class="suggestion" onclick="ask('Who conducted the workshop?')">👨🏫 Instructor</div>
-            <div class="suggestion" onclick="ask('What is Arduino?')">🤖 Arduino</div>
-            <div class="suggestion" onclick="ask('Tell me about IoT')">🌐 IoT</div>
-            <div class="suggestion" onclick="ask('Where was the workshop?')">📍 Location</div>
-            <div class="suggestion" onclick="ask('Art exhibition details')">🎨 Art Exhibition</div>
-        </div>
-    </div>
-    
-    <div class="input-container">
-        <div class="input-form">
-            <input type="text" id="input" placeholder="Ask me anything about the workshop..." autocomplete="off">
-            <button onclick="sendMessage()">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
-                </svg>
-            </button>
+            <button onclick="ask('who conducted the workshop')">Who conducted?</button>
+            <button onclick="ask('what is arduino')">Arduino</button>
+            <button onclick="ask('where')">Location</button>
+            <button onclick="ask('when')">Time</button>
         </div>
     </div>
     
@@ -179,41 +72,53 @@
                 return qaData['who conducted art exhibition'] || qaData['art exhibition artist'] || 'Abhijith R from Sivadrumam, Peruvaram';
             }
             
-            // Step 3: Keyword matching with better accuracy
+            // Step 3: Keyword matching with scoring
+            let matches = [];
+            
             for (let category in keywords) {
                 const categoryKeywords = keywords[category];
                 let keywordMatches = 0;
                 
-                // Count how many keywords match
+                // Only count keywords that are at least 2 characters or exact match
                 for (let keyword of categoryKeywords) {
-                    if (q.includes(keyword)) {
+                    if (q.includes(keyword) && (keyword.length >= 2 || q === keyword)) {
                         keywordMatches++;
                     }
                 }
                 
-                // If multiple keywords match or single strong match
                 if (keywordMatches >= 2 || (keywordMatches === 1 && categoryKeywords.some(kw => q === kw))) {
                     // Find best matching Q&A for this category
-                    let bestMatch = null;
-                    let bestScore = 0;
-                    
                     for (let qaKey in qaData) {
                         let score = 0;
-                        if (qaKey.includes(category)) score += 3;
+                        if (qaKey === category || qaKey.includes(category)) score += 3;
                         
                         for (let kw of categoryKeywords) {
                             if (qaKey.includes(kw)) score += 2;
                             if (q.includes(kw) && qaKey.includes(kw)) score += 1;
                         }
                         
-                        if (score > bestScore) {
-                            bestScore = score;
-                            bestMatch = qaData[qaKey];
+                        if (score > 0) {
+                            matches.push({score: score, answer: qaData[qaKey]});
                         }
                     }
-                    
-                    if (bestMatch) return bestMatch;
                 }
+            }
+            
+            if (matches.length > 0) {
+                // Sort by score
+                matches.sort((a, b) => b.score - a.score);
+                
+                // Special case: if question is exactly 'who' or 'u', prefer greeting
+                if (['who', 'u'].includes(q)) {
+                    for (let match of matches) {
+                        if (match.answer.includes('Hello I am A Chatbot')) {
+                            return match.answer;
+                        }
+                    }
+                }
+                
+                // Return highest scoring match
+                return matches[0].answer;
             }
             
             // Step 4: Partial match in Q&A keys (improved)
@@ -279,16 +184,10 @@
             
             if (!question) return;
             
-            const userDiv = document.createElement('div');
-            userDiv.className = 'message user';
-            userDiv.textContent = question;
-            chat.appendChild(userDiv);
+            chat.innerHTML += '<div class="message user">' + question + '</div>';
             
             const answer = findAnswer(question);
-            const botDiv = document.createElement('div');
-            botDiv.className = 'message bot';
-            botDiv.textContent = answer;
-            chat.appendChild(botDiv);
+            chat.innerHTML += '<div class="message bot">' + answer + '</div>';
             
             input.value = '';
             chat.scrollTop = chat.scrollHeight;
