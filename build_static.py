@@ -1,6 +1,6 @@
 import os
 import json
-import shutil
+import pickle
 
 # Create dist directory
 os.makedirs('dist', exist_ok=True)
@@ -8,6 +8,10 @@ os.makedirs('dist', exist_ok=True)
 # Load config
 with open('qa_config.json', 'r') as f:
     config = json.load(f)
+
+# Load PDF chunks
+with open('my_pdf_model/chunks.pkl', 'rb') as f:
+    chunks = pickle.load(f)
 
 # Create static HTML with embedded JavaScript
 html_content = f'''<!DOCTYPE html>
@@ -77,6 +81,7 @@ html_content = f'''<!DOCTYPE html>
 
     <script>
         const qaData = {json.dumps(config["custom_qa"])};
+        const pdfChunks = {json.dumps(chunks)};
         
         function findAnswer(question) {{
             const q = question.toLowerCase().trim();
@@ -99,6 +104,16 @@ html_content = f'''<!DOCTYPE html>
                 const words = key.split(" ");
                 if (words.length > 1 && words.every(word => q.includes(word))) {{
                     return answer;
+                }}
+            }}
+            
+            // Search in PDF chunks
+            const words = q.split(' ');
+            for (const chunk of pdfChunks) {{
+                const chunkLower = chunk.toLowerCase();
+                const matches = words.filter(word => word.length > 3 && chunkLower.includes(word));
+                if (matches.length >= 2) {{
+                    return chunk.substring(0, 200) + "...";
                 }}
             }}
             
@@ -142,4 +157,4 @@ html_content = f'''<!DOCTYPE html>
 with open('dist/index.html', 'w') as f:
     f.write(html_content)
 
-print("Static site built successfully!")
+print("Static site built with model data successfully!")
