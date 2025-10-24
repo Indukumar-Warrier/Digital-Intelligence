@@ -1,0 +1,38 @@
+{
+  "custom_qa": {
+    "what is digital intelligence": "Digital Intelligence combines electronics, robotics, IoT, AI and ML to create smart systems that sense, think and respond.",
+    "who":"Workshop by Indukumar and Art exhibition by Abhijith",
+    "who conducted the workshop": "Indukumar P P - ITI Electrical, MSc Physics, PGDCA. Mobile: 9446742953",
+    "who conducted art exhibition": "Abhijith R from Sivadrumam, Peruvaram. Mobile: 8590566698",
+    "art exhibition conducted by whom": "Abhijith R , Sivadrumam , Peruvaram. Mobile : 8590566698",
+    "where art exhibition conducted": "An art exhibition also arranged nearby .",
+    "at what time art exhibition conducted": "Along with . exhibition , near by room",
+    "time of the event":"2pm , 26-10-2025",
+    
+    "what is arduino": "Arduino is an open-source microcontroller that acts as robot's brain, processing sensor data and controlling motors.",
+    "explain iot": "IoT connects devices via internet. NodeMCU (ESP8266) sends sensor data to cloud platforms like Google Sheets.",
+    "what is w1209": "W1209 is temperature control module for incubators. Uses microcontroller + sensor + relay for automatic heating.",
+    "ai and ml difference": "AI makes systems think like humans. ML teaches computers to learn from data without explicit programming.",
+    "workshop location": "District Building (Jilla Mandiram), Samstha Kerala Warrier Samajam, Desam, Aluva",
+    "art exhibition location": "Art exhibition arranged nearby the same venue - District Building, Desam, Aluva",
+    "art exhibition artist": "Abhijith R from Sivadrumam, Peruvaram. Mobile: 8590566698. Pencil drawing, charcoal drawing, water colour painting",
+    "who did art exhibition": "Abhijith R from Sivadrumam, Peruvaram. Mobile: 8590566698",
+    "where art exhibition": "Art exhibition arranged nearby the workshop venue at District Building, Desam, Aluva",
+    "contact details": "Mobile: 9446742953, Email: indukumarwarrier@gmail.com",
+    "embedded system definition": "Specialized computer system for specific tasks. Real-time, low power, task-specific automation.",
+    "robotics basics": "Students learned Arduino programming, sensor connections, basic movements, obstacle detection using ultrasonic sensors."
+  },
+  "keywords": {
+    "instructor": ["who",  "teacher", "instructor","workshop","digital", "inttelligence"],
+    "contact": ["contact", "phone", "mobile", "email"],
+    "location": ["where", "place", "venue", "location"],
+    "arduino": ["arduino", "microcontroller", "robot"],
+    "iot": ["iot", "internet", "nodemcu", "wifi", "cloud"],
+    "ai": ["ai", "artificial", "intelligence", "ml", "machine", "learning"],
+    "electronics": ["electronics", "components", "circuit", "sensor"],
+    "embedded": ["embedded", "w1209", "temperature", "control"],
+    "art": ["art", "exhibition", "drawing", "painting", "abhijith"],
+    "art_conductor": ["who", "conducted", "art", "exhibition", "artist"],
+    "time":["when"]
+  }
+}
